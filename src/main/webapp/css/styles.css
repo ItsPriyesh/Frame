@@ -1,0 +1,13 @@
+.vertical-center {
+  position: absolute;
+  top: 50%;
+  left:50%;
+  transform: translate(-50%,-50%);
+}
+
+.dropzone-background {
+	border-style: dashed;
+	border-width: 3px;
+	border-radius: 10px;
+	border-color: #333;
+}
