@@ -10,12 +10,24 @@ class FrameServlet extends FrameStack with FileUploadSupport {
   private val UploadedFileKey: String = 0xf00d toString
 
   get("/") {
-    <html>
+    <html lang="en">
+      <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <title>Bootstrap 101 Template</title>
+        <link href="css/bootstrap.min.css" rel="stylesheet"/>
+      </head>
       <body>
-        <form method="post" action="/upload" enctype="multipart/form-data">
-          <input type="file" name={UploadedFileKey}/>
-          <input type="submit"/>
-        </form>
+        <h1>Hello, world!</h1>
+
+        <form action="/file-upload"
+              class="dropzone"
+              id="my-awesome-dropzone"></form>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <script src="js/dropzone.js"></script>
       </body>
     </html>
   }
