@@ -1,7 +1,11 @@
 package me.priyesh.frame
 
+import java.io.File
+
 import org.scalatra.RequestEntityTooLarge
 import org.scalatra.servlet.{FileUploadSupport, MultipartConfig, SizeConstraintExceededException}
+
+import scala.util.Try
 
 class FrameServlet extends FrameStack with FileUploadSupport {
 
@@ -18,27 +22,52 @@ class FrameServlet extends FrameStack with FileUploadSupport {
         <title>Frame</title>
         <link href="css/bootstrap.min.css" rel="stylesheet"/>
         <link href="css/styles.css" rel="stylesheet"/>
+        <link href="css/dropzone.css" rel="stylesheet"/>
       </head>
       <body>
 
-        <form action="upload" class="dropzone vertical-center dropzone-background" method="post" enctype="multipart/form-data">
+        <form action="/upload" class="dropzone vertical-center" method="post" enctype="multipart/form-data">
+          <input type="file" name={UploadedFileKey} />
         </form>
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-        <script src="js/bootstrap.min.js"></script>
-        <script src="js/dropzone.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.20/require.js"></script>
+        <script type="text/javascript">
+          var Dropzone = require(['dropzone']);
+        </script>
       </body>
     </html>
   }
 
   post("/upload") {
-    val fileStream = fileParams(UploadedFileKey).getInputStream
-    if (ImageProcessor.isValidImage(fileStream)) {
-      ImageProcessor.overlay(fileStream)
-    } else {
-
+    println(s"Uploaded something: ${fileParams.get(UploadedFileKey)}")
+    class ImageNotFoundException(message: String = "") extends Exception
+    val fileStream = Try(
+      fileParams.get(UploadedFileKey).map(_.getInputStream).getOrElse(throw new ImageNotFoundException()))
+    for {
+      presentFile <- fileStream
+      validImage <- ImageProcessor.validateImage(presentFile)
+    } yield {
+      val overlaidImageFile = ImageProcessor.overlay(request.getSession.getId, validImage)
+      val overlaidImagePath = "." + File.separator +
+        overlaidImageFile.getAbsolutePath.split(File.separator).takeRight(2).mkString(File.separator)
+      <html lang="en">
+        <head>
+          <meta charset="utf-8"/>
+          <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+          <meta name="viewport" content="width=device-width, initial-scale=1"/>
+          <title>Upload</title>
+          <link href="css/bootstrap.min.css" rel="stylesheet"/>
+          <link href="css/styles.css" rel="stylesheet"/>
+        </head>
+        <body>
+          <a href={overlaidImagePath}>CLICK</a>
+        </body>
+      </html>
     }
   }
+
+
 
   error {
     case e: SizeConstraintExceededException => RequestEntityTooLarge("too much!")
