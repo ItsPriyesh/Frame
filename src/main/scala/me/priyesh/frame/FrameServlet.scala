@@ -1,12 +1,7 @@
 package me.priyesh.frame
 
-import java.io.File
-
-import com.sksamuel.scrimage.Image
 import org.scalatra.RequestEntityTooLarge
 import org.scalatra.servlet.{FileItem, FileUploadSupport, MultipartConfig, SizeConstraintExceededException}
-
-import scala.util.Try
 
 class FrameServlet extends FrameStack with FileUploadSupport {
 
@@ -34,7 +29,16 @@ class FrameServlet extends FrameStack with FileUploadSupport {
           Dropzone.options.screenshotDropzone = {{
             paramName: {UploadedFileKey},
             init: function() {{
-              this.on('success', function(file, response) {{ alert(response); }});
+              this.on('success', function(file, response) {{
+                console.log(response)
+                if (response.startsWith('Error')) {{
+                  console.log('error')
+                  alert(response.split('::')[1]);
+                }} else {{
+                  console.log('worked')
+                  document.body.innerHTML += '<img src="output/output.png"></img>'
+                }}
+              }});
             }}
           }}
         </script>
@@ -47,12 +51,12 @@ class FrameServlet extends FrameStack with FileUploadSupport {
   private def parseUpload(itemMaybe: Option[FileItem]): String = {
     import ImageProcessor._
     itemMaybe match {
-      case None => "No file uploaded"
+      case None => "Error::No file uploaded"
       case Some(item) =>
         val image = imageFrom(item.getInputStream)
-        image.fold("Unable to parse image")(image => {
-          if (hasValidDimensions(image))  overlay(image).getAbsolutePath
-          else "Invalid image dimensions"
+        image.fold("Error::Unable to parse image")(image => {
+          if (hasValidDimensions(image)) overlay(image).getPath
+          else "Error::Invalid image dimensions"
         })
     }
   }

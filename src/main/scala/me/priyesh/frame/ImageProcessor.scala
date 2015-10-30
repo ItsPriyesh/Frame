@@ -8,7 +8,7 @@ import scala.util.{Failure, Success, Try}
 
 object ImageProcessor {
 
-  private lazy val frameImage = Image.fromStream(getClass.getResourceAsStream("/assets/time_steel_black_front.png"))
+  private lazy val FrameImage = Image.fromStream(getClass.getResourceAsStream("/assets/time_steel_black_front.png"))
 
   private val ValidDimensions = Set(
     (144, 168), (180, 180)
@@ -18,6 +18,8 @@ object ImageProcessor {
 
   def hasValidDimensions(image: Image): Boolean = ValidDimensions contains image.dimensions
 
-  def overlay(image: Image): File = image.underlay(frameImage).output(new File("./output.png"))
-
+  def overlay(image: Image): File = {
+    val output = new File("./src/main/webapp/output/output.png")
+    FrameImage.underlay(image).output(output)
+  }
 }
