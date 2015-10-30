@@ -34,7 +34,7 @@ class FrameServlet extends FrameStack with FileUploadSupport {
           Dropzone.options.screenshotDropzone = {{
             paramName: {UploadedFileKey},
             init: function() {{
-              this.on('success', function(file, response) {{ alert('File ready' + response); }});
+              this.on('success', function(file, response) {{ alert(response); }});
             }}
           }}
         </script>
@@ -42,7 +42,7 @@ class FrameServlet extends FrameStack with FileUploadSupport {
     </html>
   }
 
-  post("/upload") = parseUpload(fileParams.get(UploadedFileKey))
+  post("/upload") { parseUpload(fileParams.get(UploadedFileKey)) }
 
   private def parseUpload(itemMaybe: Option[FileItem]): String = {
     import ImageProcessor._
