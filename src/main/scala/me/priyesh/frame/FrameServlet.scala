@@ -26,14 +26,14 @@ class FrameServlet extends FrameStack with FileUploadSupport {
       </head>
       <body>
 
-        <form action="/upload" class="dropzone vertical-center" method="post" enctype="multipart/form-data">
-          <input type="file" name={UploadedFileKey} />
+        <form id="screenshotDropzone" action="/upload" class="dropzone vertical-center" method="post" enctype="multipart/form-data">
         </form>
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.20/require.js"></script>
-        <script type="text/javascript">
-          var Dropzone = require(['dropzone']);
+        <script src="js/dropzone.js"></script>
+        <script>
+          Dropzone.options.screenshotDropzone = {{ paramName: {UploadedFileKey} }}
         </script>
       </body>
     </html>
