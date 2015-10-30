@@ -46,14 +46,13 @@ class FrameServlet extends FrameStack with FileUploadSupport {
 
   private def parseUpload(itemMaybe: Option[FileItem]): String = {
     import ImageProcessor._
-
     itemMaybe match {
       case None => "No file uploaded"
       case Some(item) =>
         val image = imageFrom(item.getInputStream)
         image.fold("Unable to parse image")(image => {
-          if (hasValidDimensions(image)) "Invalid image dimensions"
-          else overlay(image).getAbsolutePath
+          if (hasValidDimensions(image))  overlay(image).getAbsolutePath
+          else "Invalid image dimensions"
         })
     }
   }
