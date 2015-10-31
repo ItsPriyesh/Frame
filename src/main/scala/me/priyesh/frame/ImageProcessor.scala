@@ -2,7 +2,7 @@ package me.priyesh.frame
 
 import java.io.{File, InputStream}
 
-import com.sksamuel.scrimage.Image
+import com.sksamuel.scrimage.{Position, Color, Image}
 
 import scala.util.{Failure, Success, Try}
 
@@ -18,8 +18,8 @@ object ImageProcessor {
 
   def hasValidDimensions(image: Image): Boolean = ValidDimensions contains image.dimensions
 
-  def overlay(image: Image): File = {
-    val output = new File("./src/main/webapp/output/output.png")
-    FrameImage.underlay(image).output(output)
+  def frame(image: Image, sessionId: String): File = {
+    val output = new File(s"./src/main/webapp/output/${sessionId}_framed.png")
+    FrameImage.underlay(image.resizeTo(300, 500)).output(output)
   }
 }

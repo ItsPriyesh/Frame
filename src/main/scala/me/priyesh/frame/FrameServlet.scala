@@ -35,8 +35,8 @@ class FrameServlet extends FrameStack with FileUploadSupport {
                   console.log('error')
                   alert(response.split('::')[1]);
                 }} else {{
-                  console.log('worked')
-                  document.body.innerHTML += '<img src="output/output.png"></img>'
+                  console.log('worked');
+                  document.body.innerHTML += '<a href="' + response + '" download="test_priyesh">Download</a>'
                 }}
               }});
             }}
@@ -55,7 +55,7 @@ class FrameServlet extends FrameStack with FileUploadSupport {
       case Some(item) =>
         val image = imageFrom(item.getInputStream)
         image.fold("Error::Unable to parse image")(image => {
-          if (hasValidDimensions(image)) overlay(image).getPath
+          if (hasValidDimensions(image)) "output/" + frame(image, session.getId).getName
           else "Error::Invalid image dimensions"
         })
     }
