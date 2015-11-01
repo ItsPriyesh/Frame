@@ -2,9 +2,9 @@ package me.priyesh.frame
 
 import java.io.{File, InputStream}
 
-import com.sksamuel.scrimage.{Position, Color, Image}
+import com.sksamuel.scrimage.Image
 
-import scala.util.{Failure, Success, Try}
+import scala.util.Try
 
 object ImageProcessor {
 
@@ -20,6 +20,7 @@ object ImageProcessor {
 
   def frame(image: Image, sessionId: String): File = {
     val output = new File(s"./src/main/webapp/output/${sessionId}_framed.png")
-    FrameImage.underlay(image.resizeTo(300, 500)).output(output)
+    FrameImage.underlay(image.resizeTo(FrameImage.width, FrameImage.height)).output(output)
   }
+
 }
